@@ -18,14 +18,164 @@ namespace WindowsFormsApplication1
         public Form1()
         {
             InitializeComponent();
-            Image bp = new Bitmap(this.pictureBox1.Height, this.pictureBox1.Width);
+            bp = new Bitmap(this.pictureBox1.Height, this.pictureBox1.Width);
             g1 = Graphics.FromImage(bp);
+            area = new Bitmap(this.pictureBox1.Height, this.pictureBox1.Width);
+            g2 = Graphics.FromImage(area);
+            pictureBox1.Image = bp;
             init();
             start();
-
-            pictureBox1.Image = bp;
+            Refresh();
 
         }
+
+        private const int MAX = 256;      // max iterations
+        private const double SX = -2.025; // start value real
+        private const double SY = -1.125; // start value imaginary
+        private const double EX = 0.6;    // end value real
+        private const double EY = 1.125;  // end value imaginary
+        private static int x1, y1, xs, ys, xe, ye;
+        private static double xstart, ystart, xende, yende, xzoom, yzoom;
+        private static bool action, rectangle, finished;
+        private static float xy;
+        private Image bp, area;
+        private Graphics g1, g2;
+        //private HSB HSBcol=new HSB();
+
+        public void init() // all instances will be prepared
+        {
+            //HSBcol = new HSB();
+            this.Size = new Size(640, 480);
+            finished = false;
+            x1 = this.Width;
+            y1 = this.Height;
+            xy = (float)x1 / (float)y1;
+            //?JAVA? picture = createImage(x1, y1);
+            //?JAVA? g1 = picture.getGraphics();
+            finished = true;
+            mandelbrot();
+        }
+
+        public void destroy() // delete all instances 
+        {
+            if (finished)
+            {
+                bp = null;
+                g1 = null;
+                GC.Collect(); // garbage collection
+            }
+        }
+
+        public void stop()
+        {
+        }
+
+        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        {
+            e.Graphics.DrawImageUnscaled(bp, 0, 0);
+            e.Graphics.DrawImageUnscaled(area, 0, 0);
+        }
+
+        public void updateRectangle()
+        {
+            g2.Clear(Color.Transparent);
+            Graphics g = this.CreateGraphics();
+            if (rectangle)
+            {
+                Color color = Color.White;
+                Pen mypen = new Pen(color);
+                if (xs < xe)
+                {
+                    if (ys < ye) g2.DrawRectangle(mypen, xs, ys, (xe - xs), (ye - ys));
+                    else g2.DrawRectangle(mypen, xs, ye, (xe - xs), (ys - ye));
+                }
+                else
+                {
+                    if (ys < ye) g2.DrawRectangle(mypen, xe, ys, (xs - xe), (ye - ys));
+                    else g2.DrawRectangle(mypen, xe, ye, (xs - xe), (ys - ye));
+                }
+            }
+        }
+
+
+            private void mandelbrot() // calculate all points
+            {
+                int x, y;
+                float h, b, alt = 0.0f;
+
+                action = false;
+                for (x = 0; x < x1; x += 2)
+                    for (y = 0; y < y1; y++)
+                    {
+                        h = pointcolour(xstart + xzoom * (double)x, ystart + yzoom * (double)y); // color value
+                        if (h != alt)
+                        {
+                            b = 1.0f - h * h; // brightnes
+
+                            Color color = HSBColor.FromHSB(new HSBColor(h * 255, 0.8f * 255, b * 255));  // VERY IMPORTANT
+                            //djm 
+                            alt = h;
+                            Pen pen = new Pen(color);
+                            g1.DrawLine(pen, x, y, x + 1, y);
+                        }
+                    }
+                action = true;
+            }
+
+
+        public void start()
+        {
+            action = false;
+            rectangle = false;
+            initvalues();
+            xzoom = (xende - xstart) / (double)x1;
+            yzoom = (yende - ystart) / (double)y1;
+            mandelbrot();
+        }
+
+        private float pointcolour(double xwert, double ywert) // color value from 0.0 to 1.0 by iterations
+        {
+            double r = 0.0, i = 0.0, m = 0.0;
+            int j = 0;
+
+            while ((j < MAX) && (m < 4.0))
+            {
+                j++;
+                m = r * r - i * i;
+                i = 2.0 * r * i + ywert;
+                r = m + xwert;
+            }
+            return (float)j / (float)MAX;
+        }
+
+        private void initvalues() // reset start values
+        {
+            xstart = SX;
+            ystart = SY;
+            xende = EX;
+            yende = EY;
+            if ((float)((xende - xstart) / (yende - ystart)) != xy)
+                xstart = xende - (yende - ystart) * (double)xy;
+        }
+
+        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            //e.consume();
+            if (action)
+            {
+                xs = e.X;
+                ys = e.Y;
+            }
+        }
+
+
+        /// <summary>
+        /// djm added, Java can work with the HSB/V colour system
+        /// c# can only do RGB
+        /// so I searched the internet for some code to convert
+        /// see http://www.codeproject.com/dotnet/HSBColorClass.asp
+        /// note I have removed some code from the downloaded class that isn't needed, just to make it clearer
+        /// </summary>
         public struct HSBColor
         {
             float h;
@@ -144,180 +294,74 @@ namespace WindowsFormsApplication1
             }
 
         }
-        private const int MAX = 256;      // max iterations
-        private const double SX = -2.025; // start value real
-        private const double SY = -1.125; // start value imaginary
-        private const double EX = 0.6;    // end value real
-        private const double EY = 1.125;  // end value imaginary
-        private static int x1, y1, xs, ys, xe, ye;
-        private static double xstart, ystart, xende, yende, xzoom, yzoom;
-        private static bool action, rectangle, finished;
-        private static float xy;
-        private Image bp;
-        private Graphics g1;
-        //private HSB HSBcol=new HSB();
 
-        public void init() // all instances will be prepared
-        {
-            //HSBcol = new HSB();
-            this.Size = new Size(640, 480);
-            finished = false;
-            x1 = this.Width;
-            y1 = this.Height;
-            xy = (float)x1 / (float)y1;
-            //?JAVA? picture = createImage(x1, y1);
-            //?JAVA? g1 = picture.getGraphics();
-            finished = true;
-            mandelbrot();
-        }
-
-        public void destroy() // delete all instances 
-        {
-            if (finished)
-            {
-                bp = null;
-                g1 = null;
-                GC.Collect(); // garbage collection
-            }
-        }
-
-        public void start()
-        {
-            action = false;
-            rectangle = false;
-            initvalues();
-            xzoom = (xende - xstart) / (double)x1;
-            yzoom = (yende - ystart) / (double)y1;
-            mandelbrot();
-        }
-
-        public void stop()
-        {
-        }
-
-        private void mandelbrot() // calculate all points
-        {
-            int x, y;
-            float h, b, alt = 0.0f;
-
-            action = false;
-            for (x = 0; x < x1; x += 2)
-                for (y = 0; y < y1; y++)
-                {
-                    h = pointcolour(xstart + xzoom * (double)x, ystart + yzoom * (double)y); // color value
-                    if (h != alt)
-                    {
-                        b = 1.0f - h * h; // brightnes
-
-                        Color color = HSBColor.FromHSB(new HSBColor(h * 255, 0.8f * 255, b * 255));  // VERY IMPORTANT
-                        //djm 
-                        alt = h;
-                        Pen pen = new Pen(color);
-                        g1.DrawLine(pen, x, y, x + 1, y);
-                    }
-                }
-            action = true;
-        }
-
-        private float pointcolour(double xwert, double ywert) // color value from 0.0 to 1.0 by iterations
-        {
-            double r = 0.0, i = 0.0, m = 0.0;
-            int j = 0;
-
-            while ((j < MAX) && (m < 4.0))
-            {
-                j++;
-                m = r * r - i * i;
-                i = 2.0 * r * i + ywert;
-                r = m + xwert;
-            }
-            return (float)j / (float)MAX;
-        }
-
-        private void initvalues() // reset start values
-        {
-            xstart = SX;
-            ystart = SY;
-            xende = EX;
-            yende = EY;
-            if ((float)((xende - xstart) / (yende - ystart)) != xy)
-                xstart = xende - (yende - ystart) * (double)xy;
-        }
-
-        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
-        {
-            //e.consume();
-            if (action)
-            {
-                xs = e.X;
-                ys = e.Y;
-            }
-        }
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
 
         }
 
-
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
             int z, w;
-
-            //e.consume();
-            if (action)
+            if (e.Button == MouseButtons.Left)
             {
-                xe = e.X;
-                ye = e.Y;
-                if (xs > xe)
+                //e.consume();
+                if (action)
                 {
-                    z = xs;
-                    xs = xe;
-                    xe = z;
+                    xe = e.X;
+                    ye = e.Y;
+                    if (xs > xe)
+                    {
+                        z = xs;
+                        xs = xe;
+                        xe = z;
+                    }
+                    if (ys > ye)
+                    {
+                        z = ys;
+                        ys = ye;
+                        ye = z;
+                    }
+                    w = (xe - xs);
+                    z = (ye - ys);
+                    if ((w < 2) && (z < 2)) initvalues();
+                    else
+                    {
+                        if (((float)w > (float)z * xy)) ye = (int)((float)ys + (float)w / xy);
+                        else xe = (int)((float)xs + (float)z * xy);
+                        xende = xstart + xzoom * (double)xe;
+                        yende = ystart + yzoom * (double)ye;
+                        xstart += xzoom * (double)xs;
+                        ystart += yzoom * (double)ys;
+                    }
+                    xzoom = (xende - xstart) / (double)x1;
+                    yzoom = (yende - ystart) / (double)y1;
+                    mandelbrot();
+                    rectangle = false;
+                    Refresh();
                 }
-                if (ys > ye)
-                {
-                    z = ys;
-                    ys = ye;
-                    ye = z;
-                }
-                w = (xe - xs);
-                z = (ye - ys);
-                if ((w < 2) && (z < 2)) initvalues();
-                else
-                {
-                    if (((float)w > (float)z * xy)) ye = (int)((float)ys + (float)w / xy);
-                    else xe = (int)((float)xs + (float)z * xy);
-                    xende = xstart + xzoom * (double)xe;
-                    yende = ystart + yzoom * (double)ye;
-                    xstart += xzoom * (double)xs;
-                    ystart += yzoom * (double)ys;
-                }
-                xzoom = (xende - xstart) / (double)x1;
-                yzoom = (yende - ystart) / (double)y1;
-                mandelbrot();
-                rectangle = false;
-                Refresh();
             }
-
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
-            //e.consume();
-            if (action)
+            if (e.Button == MouseButtons.Left)
             {
-                xe = e.X;
-                ye = e.Y;
-                rectangle = true;
-                Refresh();
+                if (action)
+                {
+                    xe = e.X;
+                    ye = e.Y;
+                    rectangle = true;
+                    updateRectangle();
+                    Refresh();
+                }
             }
+            g2.Clear(Color.Transparent);
+
         }
 
-        private void Form1_Load(object s, EventArgs e)
-        {
-            
-        }
+
 
 
     }
