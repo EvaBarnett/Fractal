@@ -6,3 +6,12 @@ E:\final project\Software\Software ass1\WindowsFormsApplication1\WindowsFormsApp
 E:\final project\Software\Software ass1\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
 E:\final project\Software\Software ass1\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
 E:\final project\Software\Software ass1\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
+E:\final project\Software\SoftwareV2\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
+E:\final project\Software\SoftwareV2\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
+E:\final project\Software\SoftwareV2\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
+E:\final project\Software\SoftwareV2\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
+E:\final project\Software\SoftwareV2\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form1.resources
+E:\final project\Software\SoftwareV2\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+E:\final project\Software\SoftwareV2\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache
+E:\final project\Software\SoftwareV2\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+E:\final project\Software\SoftwareV2\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb

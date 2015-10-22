@@ -45,7 +45,7 @@ namespace WindowsFormsApplication1
         public void init() // all instances will be prepared
         {
             //HSBcol = new HSB();
-            this.Size = new Size(640, 480);
+            //this.Size = new Size(640, 480);
             finished = false;
             x1 = this.Width;
             y1 = this.Height;
@@ -53,13 +53,14 @@ namespace WindowsFormsApplication1
             //?JAVA? picture = createImage(x1, y1);
             //?JAVA? g1 = picture.getGraphics();
             finished = true;
-            mandelbrot();
+            //mandelbrot();
         }
 
         public void destroy() // delete all instances 
         {
             if (finished)
             {
+                g1 = null;
                 bp = null;
                 g1 = null;
                 GC.Collect(); // garbage collection
@@ -69,6 +70,8 @@ namespace WindowsFormsApplication1
         public void stop()
         {
         }
+
+
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
@@ -98,30 +101,32 @@ namespace WindowsFormsApplication1
         }
 
 
-            private void mandelbrot() // calculate all points
-            {
-                int x, y;
-                float h, b, alt = 0.0f;
+        private void mandelbrot() // calculate all points
+        {
+            int x, y;
+            float h, b, alt = 0.0f;
 
-                action = false;
-                for (x = 0; x < x1; x += 2)
-                    for (y = 0; y < y1; y++)
+            action = false;
+            ///setCursor(c1);
+            ///showStatus("Mandelbrot-Set will be produced - please wait...");
+            for (x = 0; x < x1; x += 2)
+                for (y = 0; y < y1; y++)
+                {
+                    h = pointcolour(xstart + xzoom * (double)x, ystart + yzoom * (double)y); // color value
+                    if (h != alt)
                     {
-                        h = pointcolour(xstart + xzoom * (double)x, ystart + yzoom * (double)y); // color value
-                        if (h != alt)
-                        {
-                            b = 1.0f - h * h; // brightnes
-
-                            Color color = HSBColor.FromHSB(new HSBColor(h * 255, 0.8f * 255, b * 255));  // VERY IMPORTANT
-                            //djm 
-                            alt = h;
-                            Pen pen = new Pen(color);
-                            g1.DrawLine(pen, x, y, x + 1, y);
-                        }
+                        b = 1.0f - h * h; // brightness
+                        Color color = HSBColor.FromHSB(new HSBColor(h * 255, 0.8f * 255, b * 255));
+                        Pen pen = new Pen(color);
+                        g1.DrawLine(pen, x, y, x + 1, y);
+                        /// alt = h;
                     }
-                action = true;
-            }
+                }
 
+            ///showStatus("Mandelbrot-Set ready - please select zoom area with pressed mouse.");
+            ///setCursor(c2);
+            action = true;
+        }
 
         public void start()
         {
@@ -361,7 +366,17 @@ namespace WindowsFormsApplication1
 
         }
 
+        static int count = 0;
 
+        private void Form1_Closed(object sender, System.EventArgs e)
+        {
+            count -= 1;
+        }
+
+        private void Form1_Load(object sender, System.EventArgs e)
+        {
+            count += 1;
+        }
 
 
     }
