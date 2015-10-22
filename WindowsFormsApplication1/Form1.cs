@@ -26,7 +26,6 @@ namespace WindowsFormsApplication1
             init();
             start();
             Refresh();
-
         }
 
         private const int MAX = 256;      // max iterations
@@ -42,13 +41,14 @@ namespace WindowsFormsApplication1
         private Graphics g1, g2;
         //private HSB HSBcol=new HSB();
 
+
         public void init() // all instances will be prepared
         {
             //HSBcol = new HSB();
-            //this.Size = new Size(640, 480);
+            this.Size = new Size(640, 480);
             finished = false;
-            x1 = this.Width;
-            y1 = this.Height;
+            x1 = this.pictureBox1.Width;  //---->added    pictureBox1   
+            y1 = this.pictureBox1.Height; //---->added    pictureBox1   
             xy = (float)x1 / (float)y1;
             //?JAVA? picture = createImage(x1, y1);
             //?JAVA? g1 = picture.getGraphics();
@@ -152,6 +152,7 @@ namespace WindowsFormsApplication1
             }
             return (float)j / (float)MAX;
         }
+
 
         private void initvalues() // reset start values
         {
