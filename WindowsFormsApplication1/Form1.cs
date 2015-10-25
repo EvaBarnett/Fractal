@@ -18,16 +18,21 @@ namespace WindowsFormsApplication1
         public Form1()
         {
             InitializeComponent();
+            c1 = Cursors.WaitCursor;
+            c2 = Cursors.Cross;
             bp = new Bitmap(this.pictureBox1.Height, this.pictureBox1.Width);
             g1 = Graphics.FromImage(bp);
             area = new Bitmap(this.pictureBox1.Height, this.pictureBox1.Width);
             g2 = Graphics.FromImage(area);
             pictureBox1.Image = bp;
+
             init();
             start();
             Refresh();
         }
 
+        private Cursor c1;
+        private Cursor c2;
         private const int MAX = 256;      // max iterations
         private const double SX = -2.025; // start value real
         private const double SY = -1.125; // start value imaginary
@@ -39,13 +44,15 @@ namespace WindowsFormsApplication1
         private static float xy;
         private Image bp, area;
         private Graphics g1, g2;
+
+
         //private HSB HSBcol=new HSB();
 
 
         public void init() // all instances will be prepared
         {
             //HSBcol = new HSB();
-            this.Size = new Size(640, 480);
+            //this.Size = new Size(640, 480);
             finished = false;
             x1 = this.pictureBox1.Width;  //---->added    pictureBox1   
             y1 = this.pictureBox1.Height; //---->added    pictureBox1   
@@ -71,17 +78,9 @@ namespace WindowsFormsApplication1
         {
         }
 
-
-
-        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        public void update()
         {
-            e.Graphics.DrawImageUnscaled(bp, 0, 0);
-            e.Graphics.DrawImageUnscaled(area, 0, 0);
-        }
-
-        public void updateRectangle()
-        {
-            g2.Clear(Color.Transparent);
+            g1.Clear(Color.Transparent);
             Graphics g = this.CreateGraphics();
             if (rectangle)
             {
@@ -89,17 +88,23 @@ namespace WindowsFormsApplication1
                 Pen mypen = new Pen(color);
                 if (xs < xe)
                 {
-                    if (ys < ye) g2.DrawRectangle(mypen, xs, ys, (xe - xs), (ye - ys));
-                    else g2.DrawRectangle(mypen, xs, ye, (xe - xs), (ys - ye));
+                    if (ys < ye) g1.DrawRectangle(mypen, xs, ys, (xe - xs), (ye - ys));
+                    else g1.DrawRectangle(mypen, xs, ye, (xe - xs), (ys - ye));
                 }
                 else
                 {
-                    if (ys < ye) g2.DrawRectangle(mypen, xe, ys, (xs - xe), (ye - ys));
-                    else g2.DrawRectangle(mypen, xe, ye, (xs - xe), (ys - ye));
+                    if (ys < ye) g1.DrawRectangle(mypen, xe, ys, (xs - xe), (ye - ys));
+                    else g1.DrawRectangle(mypen, xe, ye, (xs - xe), (ys - ye));
                 }
             }
         }
 
+        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        {
+            //e.Graphics.DrawImageUnscaled(area, 0, 0);
+            //e.Graphics.DrawImageUnscaled(bp, 0, 0);
+
+        }
 
         private void mandelbrot() // calculate all points
         {
@@ -107,8 +112,8 @@ namespace WindowsFormsApplication1
             float h, b, alt = 0.0f;
 
             action = false;
-            ///setCursor(c1);
-            ///showStatus("Mandelbrot-Set will be produced - please wait...");
+            c1 = Cursor.Current;
+            //showStatus("Mandelbrot-Set will be produced - please wait...");
             for (x = 0; x < x1; x += 2)
                 for (y = 0; y < y1; y++)
                 {
@@ -125,7 +130,9 @@ namespace WindowsFormsApplication1
 
             ///showStatus("Mandelbrot-Set ready - please select zoom area with pressed mouse.");
             ///setCursor(c2);
+            c2 = Cursor.Current;
             action = true;
+
         }
 
         public void start()
@@ -162,16 +169,6 @@ namespace WindowsFormsApplication1
             yende = EY;
             if ((float)((xende - xstart) / (yende - ystart)) != xy)
                 xstart = xende - (yende - ystart) * (double)xy;
-        }
-
-        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
-        {
-            //e.consume();
-            if (action)
-            {
-                xs = e.X;
-                ys = e.Y;
-            }
         }
 
 
@@ -301,13 +298,22 @@ namespace WindowsFormsApplication1
 
         }
 
+        private void pictureBox1_MouseDown_1(object sender, MouseEventArgs e)
+        {
+            //e.Consume();
+            if (action)
+            {
+                xs = e.X;
+                ys = e.Y;
+            }
+        }
 
         private void pictureBox1_Click(object sender, EventArgs e)
         {
 
         }
 
-        private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
+        private void Form1_MouseUp(object sender, MouseEventArgs e)
         {
             int z, w;
             if (e.Button == MouseButtons.Left)
@@ -350,6 +356,8 @@ namespace WindowsFormsApplication1
             }
         }
 
+
+
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -359,26 +367,26 @@ namespace WindowsFormsApplication1
                     xe = e.X;
                     ye = e.Y;
                     rectangle = true;
-                    updateRectangle();
+                    update();
                     Refresh();
                 }
             }
-            g2.Clear(Color.Transparent);
-
+            //g1.Clear(Color.Transparent);
         }
 
-        static int count = 0;
-
-        private void Form1_Closed(object sender, System.EventArgs e)
-        {
-            count -= 1;
-        }
 
         private void Form1_Load(object sender, System.EventArgs e)
         {
-            count += 1;
+
         }
 
 
-    }
+
+
+
+        }
+
+
+
+
 }
