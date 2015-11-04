@@ -20,11 +20,14 @@ namespace WindowsFormsApplication1
             InitializeComponent();
             c1 = Cursors.WaitCursor;
             c2 = Cursors.Cross;
+
+
             bp = new Bitmap(this.pictureBox1.Height, this.pictureBox1.Width);
             g1 = Graphics.FromImage(bp);
             area = new Bitmap(this.pictureBox1.Height, this.pictureBox1.Width);
             g2 = Graphics.FromImage(area);
             pictureBox1.Image = bp;
+
 
             init();
             start();
@@ -44,6 +47,7 @@ namespace WindowsFormsApplication1
         private static float xy;
         private Image bp, area;
         private Graphics g1, g2;
+
 
 
         //private HSB HSBcol=new HSB();
@@ -80,7 +84,7 @@ namespace WindowsFormsApplication1
 
         public void update()
         {
-            g1.Clear(Color.Transparent);
+            g2.Clear(Color.Transparent);
             Graphics g = this.CreateGraphics();
             if (rectangle)
             {
@@ -88,21 +92,21 @@ namespace WindowsFormsApplication1
                 Pen mypen = new Pen(color);
                 if (xs < xe)
                 {
-                    if (ys < ye) g1.DrawRectangle(mypen, xs, ys, (xe - xs), (ye - ys));
-                    else g1.DrawRectangle(mypen, xs, ye, (xe - xs), (ys - ye));
+                    if (ys < ye) g2.DrawRectangle(mypen, xs, ys, (xe - xs), (ye - ys));
+                    else g2.DrawRectangle(mypen, xs, ye, (xe - xs), (ys - ye));
                 }
                 else
                 {
-                    if (ys < ye) g1.DrawRectangle(mypen, xe, ys, (xs - xe), (ye - ys));
-                    else g1.DrawRectangle(mypen, xe, ye, (xs - xe), (ys - ye));
+                    if (ys < ye) g2.DrawRectangle(mypen, xe, ys, (xs - xe), (ye - ys));
+                    else g2.DrawRectangle(mypen, xe, ye, (xs - xe), (ys - ye));
                 }
             }
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
-            //e.Graphics.DrawImageUnscaled(area, 0, 0);
-            //e.Graphics.DrawImageUnscaled(bp, 0, 0);
+            e.Graphics.DrawImageUnscaled(bp, 0, 0);
+            e.Graphics.DrawImageUnscaled(area, 0, 0);
 
         }
 
@@ -315,6 +319,7 @@ namespace WindowsFormsApplication1
 
         private void Form1_MouseUp(object sender, MouseEventArgs e)
         {
+
             int z, w;
             if (e.Button == MouseButtons.Left)
             {
@@ -352,6 +357,7 @@ namespace WindowsFormsApplication1
                     mandelbrot();
                     rectangle = false;
                     Refresh();
+
                 }
             }
         }
@@ -371,7 +377,7 @@ namespace WindowsFormsApplication1
                     Refresh();
                 }
             }
-            //g1.Clear(Color.Transparent);
+            g2.Clear(Color.Transparent);
         }
 
 
