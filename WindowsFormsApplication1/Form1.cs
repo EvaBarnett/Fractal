@@ -18,10 +18,11 @@ namespace WindowsFormsApplication1
         public Form1()
         {
             InitializeComponent();
+            //Cursor variables
             c1 = Cursors.WaitCursor;
             c2 = Cursors.Cross;
 
-
+            //This saves the set heights of the generated picture boxes
             bp = new Bitmap(this.pictureBox1.Height, this.pictureBox1.Width);
             g1 = Graphics.FromImage(bp);
             area = new Bitmap(this.pictureBox1.Height, this.pictureBox1.Width);
@@ -34,8 +35,8 @@ namespace WindowsFormsApplication1
             Refresh();
         }
 
-        private Cursor c1;
-        private Cursor c2;
+        private Cursor c1; //sets c1 to the Cursor variable 
+        private Cursor c2; //sets c2 to the Cursor variable 
         private const int MAX = 256;      // max iterations
         private const double SX = -2.025; // start value real
         private const double SY = -1.125; // start value imaginary
@@ -71,6 +72,7 @@ namespace WindowsFormsApplication1
         {
             if (finished)
             {
+                //if program finishes, set below values to null
                 g1 = null;
                 bp = null;
                 g1 = null;
@@ -78,17 +80,19 @@ namespace WindowsFormsApplication1
             }
         }
 
-        public void stop()
-        {
-        }
 
         public void update()
         {
+            //clears the colour and implements a transparent background
             g2.Clear(Color.Transparent);
+          
             Graphics g = this.CreateGraphics();
+            //if the drawing is a rectangle then excecute the below code
             if (rectangle)
             {
+                //set a default colour for the pen
                 Color color = Color.White;
+                //instantiate the pen function
                 Pen mypen = new Pen(color);
                 if (xs < xe)
                 {
@@ -103,8 +107,10 @@ namespace WindowsFormsApplication1
             }
         }
 
+        //picture box function
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
+            //this draws the background and overlay using the specified co-ordinates
             e.Graphics.DrawImageUnscaled(bp, 0, 0);
             e.Graphics.DrawImageUnscaled(area, 0, 0);
 
