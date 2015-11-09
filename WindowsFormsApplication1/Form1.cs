@@ -239,7 +239,7 @@ namespace WindowsFormsApplication1
                     return FromHSB(this);
                 }
             }
-
+// ADDS THE COLOURS TO THE FRACTUAL ( YOU MIGHT WANNA SAY HERE HOW YOU DID THAT) 
             public static Color FromHSB(HSBColor hsbColor)
             {
                 float r = hsbColor.b;
@@ -307,7 +307,7 @@ namespace WindowsFormsApplication1
             }
 
         }
-
+// ENABLES TO CLICK SO CAN ZOOM IN AND OUT 
         private void pictureBox1_MouseDown_1(object sender, MouseEventArgs e)
         {
             //e.Consume();
@@ -317,7 +317,7 @@ namespace WindowsFormsApplication1
                 ys = e.Y;
             }
         }
-
+// THE CODE BELOW ENABLES TO CLICK INSIDE THE PICTURE BOX
         private void pictureBox1_Click(object sender, EventArgs e)
         {
 
@@ -386,7 +386,7 @@ namespace WindowsFormsApplication1
             g2.Clear(Color.Transparent);
         }
 
-
+//THIS LOADS ALL OF THE FORM
         private void Form1_Load(object sender, System.EventArgs e)
         {
 
